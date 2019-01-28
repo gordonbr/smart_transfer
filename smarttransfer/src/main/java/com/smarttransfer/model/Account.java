@@ -1,15 +1,16 @@
 package com.smarttransfer.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Version;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by jonathasalves on 26/01/2019.
  */
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L;

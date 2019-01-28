@@ -1,35 +1,51 @@
 package com.smarttransfer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
+import java.util.Date;
+
 /**
  * Created by jonathasalves on 27/01/2019.
  */
+@Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TransferModel {
 
-    private long idSource;
-    private long idTarget;
+    @Id
+    @GeneratedValue
+    private long id;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_source", referencedColumnName = "id")
+    private Account accountSource;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_target", referencedColumnName = "id")
+    private Account accountTarget;
+
     private double value;
+    private Date timestamp;
 
-    public long getIdSource() {
-        return idSource;
-    }
+    public TransferModel() {}
 
-    public void setIdSource(long idSource) {
-        this.idSource = idSource;
-    }
+    public long getId() { return id; }
 
-    public long getIdTarget() {
-        return idTarget;
-    }
+    public void setId(long id) { this.id = id; }
 
-    public void setIdTarget(long idTarget) {
-        this.idTarget = idTarget;
-    }
+    public Account getAccountSource() { return accountSource; }
 
-    public double getValue() {
-        return value;
-    }
+    public void setAccountSource(Account accountSource) { this.accountSource = accountSource; }
 
-    public void setValue(double value) {
-        this.value = value;
-    }
+    public Account getAccountTarget() { return accountTarget; }
+
+    public void setAccountTarget(Account accountTarget) { this.accountTarget = accountTarget; }
+
+    public double getValue() { return value; }
+
+    public void setValue(double value) { this.value = value; }
+
+    public Date getTimestamp() { return timestamp; }
+
+    public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
 }

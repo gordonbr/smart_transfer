@@ -3,24 +3,62 @@ package com.smarttransfer.service;
 import com.smarttransfer.model.Account;
 import com.smarttransfer.model.TransferModel;
 import com.smarttransfer.repository.AccountDAO;
+import com.smarttransfer.repository.TransferModelDAO;
+import com.smarttransfer.util.HibernateUtil;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by jonathasalves on 27/01/2019.
  */
 public class TransferService {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(TransferService.class);
+
     public void transferMoney(TransferModel transferModel){
 
-        AccountDAO accountDAO = AccountDAO.getRepository();
+        AccountDAO accountDAO = new AccountDAO();
+        TransferModelDAO transferModelDAO = new TransferModelDAO();
+        Transaction transaction = null;
 
-        Account accountSource = accountDAO.load(transferModel.getIdSource());
-        Account accountTarget = accountDAO.load((transferModel.getIdTarget()));
+        try(Session session = HibernateUtil.getSession()){
+            transaction = session.beginTransaction();
 
-        if(accountSource.getBalance() - transferModel.getValue() >= 0){
-            accountSource.setBalance(accountSource.getBalance() - transferModel.getValue());
-            accountTarget.setBalance((accountTarget.getBalance() + transferModel.getValue()));
+            Account accountSource = accountDAO.load(session, transferModel.getAccountSource().getId());
+            Account accountTarget = accountDAO.load(session, (transferModel.getAccountTarget().getId()));
 
-            accountDAO.updateTransfer(accountSource, accountTarget);
+            /**
+             * If there is enough founds in the source account, makes the transfer.
+             * Saves the transfer to audit and log.
+             */
+            if(accountSource.getBalance() - transferModel.getValue() >= 0){
+                accountSource.setBalance(accountSource.getBalance() - transferModel.getValue());
+                accountTarget.setBalance((accountTarget.getBalance() + transferModel.getValue()));
+
+                accountDAO.update(session, accountSource);
+                accountDAO.update(session, accountTarget);
+
+                transferModel.setTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
+                transferModel.setAccountSource(accountSource);
+                transferModel.setAccountTarget(accountTarget);
+                transferModelDAO.save(session, transferModel);
+                transaction.commit();
+            }
+
+
+        } catch (Exception e) {
+            if(transaction != null) {
+                transaction.rollback();
+                LOGGER.error("ERROR TRANSFER on commit ROLLBACK", e.toString());
+            }
+            LOGGER.error("ERROR TRANSFER on commit {}", e.toString());
         }
+
+
     }
 }

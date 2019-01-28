@@ -1,4 +1,5 @@
 import com.smarttransfer.controller.AccountController;
+import com.smarttransfer.controller.TransferController;
 import io.javalin.Javalin;
 
 /**
@@ -14,9 +15,9 @@ public class Application {
                 .start(7071);
 
 
-        app.get("/account/:id", AccountController.saveAccount);
-        app.post("/account/:balance", AccountController.getAccount);
+        app.get("/account/:id", AccountController.getAccount);
+        app.post("/account/:balance", AccountController.saveAccount);
         app.post("/transfer", AccountController.transferMoney);
+        app.get("/transfer/by_account_source/:id", TransferController.getByAccountSource);
     }
-
 }
