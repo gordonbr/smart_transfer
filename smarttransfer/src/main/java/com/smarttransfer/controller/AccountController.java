@@ -47,7 +47,21 @@ public class AccountController {
 
         TransferModel transferModel = ctx.bodyAsClass(TransferModel.class);
         TransferService transferService = new TransferService();
-        transferService.transferMoney(transferModel);
-        ctx.json(transferModel);
+        boolean success = false;
+
+        for(int i = 0; i < 10 && !success; i++) {
+            success = transferService.transferMoney(transferModel);
+            if(!success) {
+                LOGGER.error("TRANSFER FAILED sleeping");
+                Thread.sleep(200);
+            }
+        }
+
+        if(success) {
+            ctx.json(transferModel);
+        } else {
+            ctx.status(500);
+            ctx.json(new ResponseModel(0, "FAILED DUE TO STARVATION"));
+        }
     };
 }

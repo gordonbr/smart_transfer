@@ -20,13 +20,14 @@ public class TransferService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(TransferService.class);
 
-    public void transferMoney(TransferModel transferModel){
+    public boolean transferMoney(TransferModel transferModel){
 
         AccountDAO accountDAO = new AccountDAO();
         TransferModelDAO transferModelDAO = new TransferModelDAO();
         Transaction transaction = null;
+        Session session = HibernateUtil.getSession();
 
-        try(Session session = HibernateUtil.getSession()){
+        try{
             transaction = session.beginTransaction();
 
             Account accountSource = accountDAO.load(session, transferModel.getAccountSource().getId());
@@ -48,17 +49,19 @@ public class TransferService {
                 transferModel.setAccountTarget(accountTarget);
                 transferModelDAO.save(session, transferModel);
                 transaction.commit();
+                return true;
             }
-
 
         } catch (Exception e) {
             if(transaction != null) {
                 transaction.rollback();
-                LOGGER.error("ERROR TRANSFER on commit ROLLBACK", e.toString());
+                LOGGER.error("ERROR TRANSFER on commit ROLLBACK");
             }
-            LOGGER.error("ERROR TRANSFER on commit {}", e.toString());
+            LOGGER.error("ERROR TRANSFER on commit");
+        } finally {
+            session.close();
         }
 
-
+        return false;
     }
 }

@@ -35,26 +35,4 @@ public class AccountDAO {
         }
     }
 
-//    public void updateTransfer(Session session, Account source, Account target) {
-//
-//        if(source != null && target != null) {
-//            try (Session session = sessionFactory.openSession()) {
-//                Transaction transaction = session.beginTransaction();
-//                session.update(source);
-//                session.update(target);
-//                session.flush();
-//                transaction.commit();
-//            }
-//        }
-//
-//    }
-
-
-
-
-
-
-
-
-
 }
