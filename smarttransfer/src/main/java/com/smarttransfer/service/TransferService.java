@@ -4,6 +4,7 @@ import com.smarttransfer.model.Account;
 import com.smarttransfer.model.TransferModel;
 import com.smarttransfer.repository.AccountDAO;
 import com.smarttransfer.repository.TransferModelDAO;
+import com.smarttransfer.util.EMessages;
 import com.smarttransfer.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -20,12 +21,13 @@ public class TransferService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(TransferService.class);
 
-    public boolean transferMoney(TransferModel transferModel){
+    public EMessages transferMoney(TransferModel transferModel){
 
         AccountDAO accountDAO = new AccountDAO();
         TransferModelDAO transferModelDAO = new TransferModelDAO();
         Transaction transaction = null;
         Session session = HibernateUtil.getSession();
+        EMessages messsage;
 
         try{
             transaction = session.beginTransaction();
@@ -33,11 +35,11 @@ public class TransferService {
             Account accountSource = accountDAO.load(session, transferModel.getAccountSource().getId());
             Account accountTarget = accountDAO.load(session, (transferModel.getAccountTarget().getId()));
 
-            /**
-             * If there is enough founds in the source account, makes the transfer.
-             * Saves the transfer to audit and log.
-             */
-            if(accountSource.getBalance() - transferModel.getValue() >= 0){
+            if(accountSource == null || accountTarget == null) {
+                messsage = EMessages.ACCOUNT_NOT_FOUND;
+            } else if(accountSource.getBalance() - transferModel.getValue() < 0) {
+                messsage = EMessages.NOT_ENOUGH_FOUNDS;
+            } else {
                 accountSource.setBalance(accountSource.getBalance() - transferModel.getValue());
                 accountTarget.setBalance((accountTarget.getBalance() + transferModel.getValue()));
 
@@ -49,7 +51,8 @@ public class TransferService {
                 transferModel.setAccountTarget(accountTarget);
                 transferModelDAO.save(session, transferModel);
                 transaction.commit();
-                return true;
+
+                messsage = EMessages.SUCCESS;
             }
 
         } catch (Exception e) {
@@ -58,10 +61,11 @@ public class TransferService {
                 LOGGER.error("ERROR TRANSFER on commit ROLLBACK");
             }
             LOGGER.error("ERROR TRANSFER on commit");
+            messsage = EMessages.FAILED;
         } finally {
             session.close();
         }
 
-        return false;
+        return messsage;
     }
 }

@@ -5,17 +5,17 @@ package com.smarttransfer.model;
  */
 public class ResponseModel {
 
-    private int codigo;
+    private int code;
     private String mensagem;
 
-    public ResponseModel(int codigo, String mensagem) {
-        this.codigo = codigo;
+    public ResponseModel(int code, String mensagem) {
+        this.code = code;
         this.mensagem = mensagem;
     }
 
-    public int getCodigo() { return codigo; }
+    public int getCode() { return code; }
 
-    public void setCodigo(int codigo) { this.codigo = codigo; }
+    public void setCode(int code) { this.code = code; }
 
     public String getMensagem() { return mensagem; }
 
