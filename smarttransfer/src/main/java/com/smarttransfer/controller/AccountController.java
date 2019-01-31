@@ -49,7 +49,7 @@ public class AccountController {
         String balance = ctx.pathParam("balance");
         LOGGER.info("POST saveAccount with balance = {}", balance);
 
-        if(!ErrorHandler.isAccountNumberValid(balance)) {
+        if(!ErrorHandler.isBalanceValueValid(balance)) {
             ctx.status(500);
             ctx.json(AutomatedResponse.generateMessage(EMessages.INVALID_VALUE));
         } else {
@@ -59,7 +59,7 @@ public class AccountController {
                 accountDAO.save(session, account);
                 session.getTransaction().commit();
 
-                ctx.json(AutomatedResponse.generateMessage(EMessages.SUCCESS));
+                ctx.json(account);
             }
         }
     };

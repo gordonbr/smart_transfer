@@ -3,6 +3,8 @@ package com.smarttransfer.repository;
 import com.smarttransfer.model.Account;
 import org.hibernate.Session;
 
+import java.io.Serializable;
+
 /**
  * Created by jonathasalves on 26/01/2019.
  */
@@ -12,7 +14,8 @@ public class AccountDAO {
 
         if(account != null) {
             if(session.isOpen() && session.getTransaction().isActive()){
-                session.save(account);
+                Serializable id = session.save(account);
+                account.setId((Long)id);
                 session.flush();
             }
         }
@@ -32,6 +35,14 @@ public class AccountDAO {
 
         if(session.isOpen() && session.getTransaction().isActive() && account != null){
             session.update(account);
+        }
+    }
+
+    public void delete(Session session, long id) {
+        if(session.isOpen() && session.getTransaction().isActive() && id > 0){
+            Account account = new Account();
+            account.setId(id);
+            session.delete(account);
         }
     }
 

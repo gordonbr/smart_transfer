@@ -16,4 +16,15 @@ public class ErrorHandler {
 
         return true;
     }
+
+    public static boolean isBalanceValueValid(String number) {
+
+        try {
+            if(Double.parseDouble(number) <= 0) return false;
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
 }
