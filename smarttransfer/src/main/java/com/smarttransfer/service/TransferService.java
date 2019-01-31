@@ -37,8 +37,10 @@ public class TransferService {
 
             if(accountSource == null || accountTarget == null) {
                 messsage = EMessages.ACCOUNT_NOT_FOUND;
+            } else if (transferModel.getValue() <= 0) {
+                messsage = EMessages.INVALID_VALUE;
             } else if(accountSource.getBalance() - transferModel.getValue() < 0) {
-                messsage = EMessages.NOT_ENOUGH_FOUNDS;
+                messsage = EMessages.NOT_ENOUGH_FUNDS;
             } else {
                 accountSource.setBalance(accountSource.getBalance() - transferModel.getValue());
                 accountTarget.setBalance((accountTarget.getBalance() + transferModel.getValue()));

@@ -9,7 +9,6 @@ import java.util.Date;
  * Created by jonathasalves on 27/01/2019.
  */
 @Entity
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class TransferModel {
 
     @Id

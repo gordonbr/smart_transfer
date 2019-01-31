@@ -1,10 +1,8 @@
-package functional.account;
+package functional.test.account;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smarttransfer.model.Account;
 import com.smarttransfer.util.EMessages;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;

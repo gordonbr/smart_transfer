@@ -1,7 +1,6 @@
 package com.smarttransfer.util;
 
 import com.smarttransfer.model.ResponseModel;
-import com.sun.org.apache.bcel.internal.generic.SWITCH;
 
 /**
  * Created by jonathasalves on 29/01/2019.
@@ -16,7 +15,7 @@ public class AutomatedResponse {
             case SUCCESS:
                 responseModel = new ResponseModel(message.ordinal(), "SUCCESS");
                 break;
-            case NOT_ENOUGH_FOUNDS:
+            case NOT_ENOUGH_FUNDS:
                 responseModel = new ResponseModel(message.ordinal(), "NOT ENOUGH FOUND");
                 break;
             case MAXIMUM_ATTEMPTS:

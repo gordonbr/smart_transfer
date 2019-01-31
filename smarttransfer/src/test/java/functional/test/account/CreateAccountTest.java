@@ -1,10 +1,11 @@
-package functional.account;
+package functional.test.account;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.smarttransfer.util.EMessages;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.BeforeClass;
@@ -22,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 public class CreateAccountTest extends BaseTest{
 
     private static TestUtil util;
+    private String jsonMimeType = "application/json";
 
     @BeforeClass
     public static void setUp() throws IOException {
@@ -40,6 +42,9 @@ public class CreateAccountTest extends BaseTest{
             CloseableHttpResponse response = client.execute(httpPost);
             assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
+            String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
+            assertEquals( jsonMimeType, mimeType );
+
             JsonNode node = util.getJsonNodeForAccountResponse(response);
 
             assertTrue(node.get("id").intValue() > 0);
@@ -49,7 +54,7 @@ public class CreateAccountTest extends BaseTest{
     }
 
     @Test
-    public void createAccountInavlidBalanceTest() throws IOException {
+    public void createAccountInvalidBalanceTest() throws IOException {
 
         int invalidInitialBalance = -1;
 
@@ -60,6 +65,9 @@ public class CreateAccountTest extends BaseTest{
             CloseableHttpResponse response = client.execute(httpPost);
             assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusLine().getStatusCode());
 
+            String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
+            assertEquals( jsonMimeType, mimeType );
+
             JsonNode node = util.getJsonNodeForAccountResponse(response);
 
             assertEquals(EMessages.INVALID_VALUE.ordinal(), node.get("code").longValue());
@@ -67,7 +75,7 @@ public class CreateAccountTest extends BaseTest{
     }
 
     @Test
-    public void createAccountInavlidBalanceTest2() throws IOException {
+    public void createAccountInvalidBalanceTest2() throws IOException {
 
         String invalidInitialBalance = "test";
 
@@ -77,6 +85,9 @@ public class CreateAccountTest extends BaseTest{
 
             CloseableHttpResponse response = client.execute(httpPost);
             assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusLine().getStatusCode());
+
+            String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
+            assertEquals( jsonMimeType, mimeType );
 
             JsonNode node = util.getJsonNodeForAccountResponse(response);
 
@@ -95,6 +106,9 @@ public class CreateAccountTest extends BaseTest{
 
             CloseableHttpResponse response = client.execute(httpPost);
             assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusLine().getStatusCode());
+
+            String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
+            assertEquals( jsonMimeType, mimeType );
 
             JsonNode node = util.getJsonNodeForAccountResponse(response);
 

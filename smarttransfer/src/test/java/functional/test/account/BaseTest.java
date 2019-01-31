@@ -1,4 +1,4 @@
-package functional.account;
+package functional.test.account;
 
 import com.smarttransfer.util.PropertiesLoader;
 import org.junit.AfterClass;
