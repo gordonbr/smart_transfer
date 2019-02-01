@@ -38,6 +38,6 @@ I only created functional tests. They test the REST api.
 #### Start the server as described in the section above
 You can run the tests in any order
 
-I also created load tests with JMetter. Two small test scenarios (50 threads/2 loops and 10 threads/100 loops)
+I also created load tests with JMeter. Two small test scenarios (50 threads/2 loops and 10 threads/100 loops)
 simulating transfer operations between two accounts, A and B. The goal was to test the system for concurrent
 transactions. The system behaved correctly. Results my be provided, if needed.
