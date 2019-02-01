@@ -9,7 +9,7 @@ import java.util.Date;
  * Created by jonathasalves on 27/01/2019.
  */
 @Entity
-public class TransferModel {
+public class Transfer {
 
     @Id
     @GeneratedValue
@@ -26,7 +26,7 @@ public class TransferModel {
     private double value;
     private Date timestamp;
 
-    public TransferModel() {}
+    public Transfer() {}
 
     public long getId() { return id; }
 

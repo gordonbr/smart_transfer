@@ -1,14 +1,13 @@
 package com.smarttransfer.controller;
 
 import com.smarttransfer.model.Account;
-import com.smarttransfer.model.TransferModel;
+import com.smarttransfer.model.Transfer;
 import com.smarttransfer.repository.AccountDAO;
 import com.smarttransfer.service.TransferService;
 import com.smarttransfer.util.AutomatedResponse;
 import com.smarttransfer.util.EMessages;
 import com.smarttransfer.util.ErrorHandler;
 import com.smarttransfer.util.HibernateUtil;
-import com.sun.org.apache.regexp.internal.RE;
 import io.javalin.Handler;
 import org.hibernate.Session;
 import org.slf4j.Logger;
@@ -69,11 +68,11 @@ public class AccountController {
         EMessages result = EMessages.FAILED;
 
         try {
-            TransferModel transferModel = ctx.bodyAsClass(TransferModel.class);
+            Transfer transfer = ctx.bodyAsClass(Transfer.class);
             TransferService transferService = new TransferService();
 
             for (int i = 0; i < 10 && result.equals(EMessages.FAILED); i++) {
-                result = transferService.transferMoney(transferModel);
+                result = transferService.transferMoney(transfer);
 
                 if (result.equals(EMessages.FAILED)) {
                     LOGGER.error("TRANSFER FAILED sleeping");

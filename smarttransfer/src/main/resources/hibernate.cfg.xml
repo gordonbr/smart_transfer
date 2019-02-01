@@ -11,6 +11,6 @@
         <property name="show_sql">false</property>
         <property name="hbm2ddl.auto">create</property>
         <mapping class="com.smarttransfer.model.Account"/>
-        <mapping class="com.smarttransfer.model.TransferModel"/>
+        <mapping class="com.smarttransfer.model.Transfer"/>
     </session-factory>
 </hibernate-configuration>

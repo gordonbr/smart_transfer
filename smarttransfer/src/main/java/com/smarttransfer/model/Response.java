@@ -3,12 +3,12 @@ package com.smarttransfer.model;
 /**
  * Created by jonathasalves on 26/01/2019.
  */
-public class ResponseModel {
+public class Response {
 
     private int code;
     private String mensagem;
 
-    public ResponseModel(int code, String mensagem) {
+    public Response(int code, String mensagem) {
         this.code = code;
         this.mensagem = mensagem;
     }

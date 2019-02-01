@@ -1,7 +1,6 @@
 package com.smarttransfer.repository;
 
-import com.smarttransfer.model.Account;
-import com.smarttransfer.model.TransferModel;
+import com.smarttransfer.model.Transfer;
 import org.hibernate.Session;
 
 import javax.persistence.Query;
@@ -12,35 +11,35 @@ import java.util.List;
  */
 public class TransferModelDAO {
 
-    public void save(Session session, TransferModel transferModel) {
+    public void save(Session session, Transfer transfer) {
 
-        if(transferModel != null) {
+        if(transfer != null) {
             if(session.isOpen() && session.getTransaction().isActive()){
-                session.save(transferModel);
+                session.save(transfer);
                 session.flush();
             }
         }
     }
 
-    public TransferModel load(Session session, long id) {
-        TransferModel transferModel = null;
+    public Transfer load(Session session, long id) {
+        Transfer transfer = null;
 
         if(session.isOpen() && session.getTransaction().isActive()){
-            transferModel = session.get(TransferModel.class, id);
+            transfer = session.get(Transfer.class, id);
         }
 
-        return transferModel;
+        return transfer;
     }
 
-    public List<TransferModel> loadByAccountId(Session session, long id) {
+    public List<Transfer> loadByAccountId(Session session, long id) {
 
-        List<TransferModel> transferModels = null;
+        List<Transfer> transfers = null;
         if(session.isOpen() && session.getTransaction().isActive()) {
-            Query query = session.createQuery("from TransferModel where accountSource.id = :idSource");
+            Query query = session.createQuery("from Transfer where accountSource.id = :idSource");
             query.setParameter("idSource", id);
-            transferModels = query.getResultList();
+            transfers = query.getResultList();
         }
 
-        return transferModels;
+        return transfers;
     }
 }

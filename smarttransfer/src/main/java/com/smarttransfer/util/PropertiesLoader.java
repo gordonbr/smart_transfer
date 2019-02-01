@@ -11,7 +11,6 @@ public class PropertiesLoader {
 
     final private String FILE = "config.properties";
     private Properties properties;
-    private InputStream inputStream;
 
     public PropertiesLoader() throws IOException {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();

@@ -1,7 +1,7 @@
 package com.smarttransfer.service;
 
 import com.smarttransfer.model.Account;
-import com.smarttransfer.model.TransferModel;
+import com.smarttransfer.model.Transfer;
 import com.smarttransfer.repository.AccountDAO;
 import com.smarttransfer.repository.TransferModelDAO;
 import com.smarttransfer.util.EMessages;
@@ -21,7 +21,7 @@ public class TransferService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(TransferService.class);
 
-    public EMessages transferMoney(TransferModel transferModel){
+    public EMessages transferMoney(Transfer transfer){
 
         AccountDAO accountDAO = new AccountDAO();
         TransferModelDAO transferModelDAO = new TransferModelDAO();
@@ -32,28 +32,28 @@ public class TransferService {
         try{
             transaction = session.beginTransaction();
 
-            Account accountSource = accountDAO.load(session, transferModel.getAccountSource().getId());
-            Account accountTarget = accountDAO.load(session, (transferModel.getAccountTarget().getId()));
+            Account accountSource = accountDAO.load(session, transfer.getAccountSource().getId());
+            Account accountTarget = accountDAO.load(session, (transfer.getAccountTarget().getId()));
 
             if(accountSource == null || accountTarget == null) {
                 messsage = EMessages.ACCOUNT_NOT_FOUND;
-            } else if (transferModel.getValue() <= 0) {
+            } else if (transfer.getValue() <= 0) {
                 messsage = EMessages.INVALID_VALUE;
-            } else if(accountSource.getBalance() - transferModel.getValue() < 0) {
+            } else if(accountSource.getBalance() - transfer.getValue() < 0) {
                 messsage = EMessages.NOT_ENOUGH_FUNDS;
             } else {
-                accountSource.setBalance(accountSource.getBalance() - transferModel.getValue());
-                accountTarget.setBalance((accountTarget.getBalance() + transferModel.getValue()));
+                accountSource.setBalance(accountSource.getBalance() - transfer.getValue());
+                accountTarget.setBalance((accountTarget.getBalance() + transfer.getValue()));
 
                 accountDAO.update(session, accountSource);
                 accountDAO.update(session, accountTarget);
 
-                transferModel.setTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
-                transferModel.setAccountSource(accountSource);
-                transferModel.setAccountTarget(accountTarget);
-                transferModelDAO.save(session, transferModel);
-                transaction.commit();
+                transfer.setTimestamp(new Date(Calendar.getInstance().getTimeInMillis()));
+                transfer.setAccountSource(accountSource);
+                transfer.setAccountTarget(accountTarget);
+                transferModelDAO.save(session, transfer);
 
+                transaction.commit();
                 messsage = EMessages.SUCCESS;
             }
 
